@@ -30,8 +30,53 @@ namespace CitiesSuggestions
                 };
                 cities.Add(city);
             }
+            ReplaceNameWithFullName(cities);
 
             return cities;
+        }
+
+        private static void ReplaceNameWithFullName(List<CityData> cities)
+        {
+            Dictionary<string, string> countries = new Dictionary<string, string>();
+            Dictionary<string, string> admin1 = new Dictionary<string, string>();
+
+            countries.Add("CA", "Canada");
+            countries.Add("US", "USA");
+
+            // Canadian provinces
+            // https://www.thoughtco.com/abbreviations-of-canadian-provinces-510809
+            admin1.Add("01", "AB"); //Alberta
+            admin1.Add("02", "BC"); //British Columbia  
+            admin1.Add("03", "MB"); //Manitoba
+            admin1.Add("04", "NB"); //New Brunswick
+            admin1.Add("13", "NT"); //Northwest Territories
+            admin1.Add("07", "NS"); //Nova Scotia
+            admin1.Add("14", "NU"); //Nunavut
+            admin1.Add("08", "ON"); //Ontario
+            admin1.Add("09", "PE"); //Prince Edward Island
+            admin1.Add("10", "QC"); //Quebec
+            admin1.Add("11", "SK"); //Saskatchewan
+            admin1.Add("12", "YT"); //Yukon
+            admin1.Add("05", "NL"); //Newfoundland and Labrador
+
+            // USA : same as admin1 code
+
+            for(int i = 0; i<cities.Count; ++i)
+            {
+                string countryAddOn = cities[i].CountryCode; // fallback if not in dictionary
+                if (countries.ContainsKey(cities[i].CountryCode))
+                {
+                    countryAddOn = countries[cities[i].CountryCode];
+                }
+
+                string admin1AddOn = cities[i].Admin1Code;
+                if(admin1.ContainsKey(cities[i].Admin1Code))
+                {
+                    admin1AddOn = admin1[cities[i].Admin1Code];
+                }
+
+                cities[i].Name = $"{cities[i].Name}, {admin1AddOn}, {countryAddOn}";
+            }
         }
     }
 }

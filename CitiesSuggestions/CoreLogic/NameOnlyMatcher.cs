@@ -39,7 +39,7 @@ namespace CitiesSuggestions.CoreLogic
                 scores = scores.Zip(newScores, (oldScore, newScore) => oldScore * newScore).ToList();
             }
 
-            var resultItems = matchingCities.Zip(scores, (c, score) => new SuggestionsResultItem() { name = c.Name, latitude = c.Location.Latitude.ToString(), longitude = c.Location.Longitude.ToString(), score = score })
+            var resultItems = matchingCities.Zip(scores, (c, score) => new SuggestionsResultItem() { name = c.Name, latitude = c.Location.Latitude.ToString(), longitude = c.Location.Longitude.ToString(), score = Math.Round(score,2) })
                                             .OrderByDescending(mc => mc.score);
             var result = new SuggestionsResult();
             foreach (var i in resultItems)
